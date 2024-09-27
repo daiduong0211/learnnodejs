@@ -1,4 +1,4 @@
-// tạo file nodejs
+//tạo file nodejs
 npm init
 // cài đặt express
 npm install express

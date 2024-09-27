@@ -1,0 +1,26 @@
+{
+  "name": "learnnodejs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --inspect ./index.js localhost 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daiduong0211/learnnodejs.git"
+  },
+  "author": "duongdd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daiduong0211/learnnodejs/issues"
+  },
+  "homepage": "https://github.com/daiduong0211/learnnodejs#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

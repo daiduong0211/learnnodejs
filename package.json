@@ -1,10 +1,10 @@
 {
   "name": "learnnodejs",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --inspect ./src/index.js localhost 8080"
+    "start": "nodemon --inspect ./src/app.js localhost 8080"
   },
   "repository": {
     "type": "git",

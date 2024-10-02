@@ -1,7 +1,7 @@
 const newsRouter = require('./home');
 
 function route(app) {
-    app.use('/home', newsRouter); // Use app.use() for routers, not app.get()
+    app.use('/home', newsRouter);
 }
 
 module.exports = route;

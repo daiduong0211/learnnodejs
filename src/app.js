@@ -7,14 +7,14 @@ const route = require('./routes');
 const morgan = require('morgan');
 const db = require('./config/db')
 
+// app.use(express.static(path.join(__dirname, 'public')));
+// // Set static folder
 db.connect()
-// Set static folder
-app.use(express.static(path.join(__dirname, 'public')));
 
 // View engine setup
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'app', 'views'));
 
 // Debugging tool
 app.use(morgan('combined'));
@@ -23,4 +23,4 @@ app.use(morgan('combined'));
 route(app);
 
 // Start the server
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+app.listen(port, () => console.log(`App listening at http://localhost:${port}`));

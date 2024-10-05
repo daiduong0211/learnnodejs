@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 8080;
+const port = 3000;
 const handlebars = require('express-handlebars');
 const route = require('./routes');
 const morgan = require('morgan');
@@ -18,6 +18,9 @@ app.set('views', path.join(__dirname, 'app', 'views'));
 
 // Debugging tool
 app.use(morgan('combined'));
+
+// Middleware để phân tích cú pháp JSON
+app.use(express.json());
 
 // Initialize routes
 route(app);

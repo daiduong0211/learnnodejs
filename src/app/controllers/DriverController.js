@@ -8,52 +8,7 @@ class DriverController {
     // Xem tất cả tài xế
     async index(req, res) {
         try {
-            const drivers = await Driver.find(); // Lấy tất cả tài xế
-    
-            const currentMonth = new Date().getMonth(); // Lấy tháng hiện tại
-            const currentYear = new Date().getFullYear(); // Lấy năm hiện tại
-    
-            const driverData = await Promise.all(drivers.map(async (driver) => {
-                // Lọc các chuyến xe trong tháng hiện tại
-                const tripsThisMonth = await Trip.find({
-                    driver: driver._id,
-                    dateFrom: {
-                        $gte: new Date(currentYear, currentMonth, 1),
-                        $lt: new Date(currentYear, currentMonth + 1, 1)
-                    }
-                }).populate('route'); // Tham chiếu đến mô hình Route
-    
-                let totalSalary = 0;
-    
-                // Tính lương dựa trên các chuyến xe
-                for (const trip of tripsThisMonth) {
-                    const routeComplexity = trip.route.complexityLevel; // Lấy độ phức tạp của tuyến đường
-    
-                    // Tính lương mỗi chuyến xe dựa vào độ phức tạp
-                    const salaryPerTrip = routeComplexity * 100000; // Giả định hệ số lương dựa trên độ phức tạp
-    
-                    // Tính lương dựa trên vai trò
-                    if (trip.driver.equals(driver._id)) {
-                        totalSalary += salaryPerTrip * 2; // Lái xe có lương gấp đôi
-                    } else {
-                        totalSalary += salaryPerTrip; // Phụ xe
-                    }
-                }
-    
-                // Trả về tất cả thông tin của tài xế cùng với lương
-                return {
-                    _id: driver._id,
-                    firstName: driver.firstName,
-                    lastName: driver.lastName,
-                    age: driver.age,
-                    address: driver.address,
-                    dateOfBirth: driver.dateOfBirth,
-                    driver_phone: driver.driver_phone,
-                    year_experience: driver.year_experience,
-                    salary: totalSalary // Tổng lương của tài xế
-                };
-            }));
-    
+            const driverData = await Driver.find(); // Lấy tất cả tài xế
             res.status(200).json({
                 code: 200,
                 description: 'Danh sách tài xế và lương tháng.',

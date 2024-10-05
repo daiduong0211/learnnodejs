@@ -1,34 +1,23 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const TripSchema = new Schema({
-    tripCode: { type: String, maxLength: 255, required: true },       // Mã chuyến xe
-    routes: { type: mongoose.Schema.Types.ObjectId, ref: 'route', required: true }, // Tham chiếu đến Route
-    bus: { type: mongoose.Schema.Types.ObjectId, ref: 'bus', required: true },     // Tham chiếu đến Bus
-    driver: { type: mongoose.Schema.Types.ObjectId, ref: 'driver', required: true }, // Tham chiếu đến lái xe chính
-    assistantDriver: { type: mongoose.Schema.Types.ObjectId, ref: 'driver', required: true }, // Tham chiếu đến phụ xe
-    passengerCount: { type: Number, required: true },                // Số lượng hành khách
-    ticketPrice: { type: Number, required: true },                   // Giá vé
-    dateFrom: { type: Date, required: true },                         // Ngày khởi hành
+const tripSchema = new Schema({
+    ma_chuyen: { type: String, required: true, unique: true },  // Mã chuyến xe
+    route_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Route', required: true }, // Tham chiếu đến Route
+    bus_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Bus', required: true },     // Tham chiếu đến Bus
+    lai_xe_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver', required: true }, // Tham chiếu đến Lái xe
+    phu_xe_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver', required: true }, // Tham chiếu đến Phụ xe
+    so_khach: { type: Number, required: true, min: [0, 'Số lượng khách không được nhỏ hơn 0'] }, // Số lượng hành khách
+    gia_ve: { type: Number, required: true },                     // Giá vé
+    ngay_di: { type: Date, required: true },                      // Ngày khởi hành
+    ngay_ve: { type: Date, required: true, validate: {        // Ngày về
+        validator: function(value) {
+            return value >= this.ngay_di; // Ngày về phải lớn hơn hoặc bằng ngày đi
+        },
+        message: 'Ngày về phải lớn hơn hoặc bằng ngày đi'
+    }}
 });
 
-// Pre-save hook to enforce passenger count limit
-TripSchema.pre('save', async function(next) {
-    const trip = this;
+const Trip = mongoose.model('Trip', tripSchema);
 
-    // Find the bus associated with this trip to get the seat count
-    const bus = await mongoose.model('bus').findById(trip.bus);
-    if (bus) {
-        const maxPassengerCount = bus.seats - 2; // Assuming bus has a 'seatCount' field
-
-        if (trip.passengerCount > maxPassengerCount) {
-            return next(new Error(`Số lượng hành khách không được vượt quá ${maxPassengerCount}`));
-        }
-    }
-
-    next();
-});
-
-
-// Export the model
-module.exports = mongoose.model('trip', TripSchema);
+module.exports = Trip;

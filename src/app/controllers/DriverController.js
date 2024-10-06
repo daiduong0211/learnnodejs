@@ -80,6 +80,87 @@ class DriverController {
         }
     }
 
+
+   getSalary = async (req, res) => {
+        try {
+            const driversWithSalaries = await Driver.aggregate([
+                {
+                    $lookup: {
+                        from: "trips",
+                        let: { driverId: "$driver_id" },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $or: [
+                                            { $eq: ["$lai_xe_id", "$$driverId"] },
+                                            { $eq: ["$phu_xe_id", "$$driverId"] }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                $lookup: {
+                                    from: "routes",
+                                    localField: "route_id",
+                                    foreignField: "route_id",
+                                    as: "route_info"
+                                }
+                            },
+                            {
+                                $addFields: {
+                                    trip_length: "$do_dai",
+                                    trip_complexity: { $arrayElemAt: ["$route_info.do_phuc_tap", 0] },
+                                    salary_lai_xe: {
+                                        $cond: {
+                                            if: { $eq: ["$lai_xe_id", "$$driverId"] },
+                                            then: { $multiply: [100, { $arrayElemAt: ["$route_info.do_phuc_tap", 0] }] },
+                                            else: 0
+                                        }
+                                    },
+                                    salary_phu_xe: {
+                                        $cond: {
+                                            if: { $eq: ["$phu_xe_id", "$$driverId"] },
+                                            then: { $multiply: [50, { $arrayElemAt: ["$route_info.do_phuc_tap", 0] }] },
+                                            else: 0
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        as: "trips"
+                    }
+                },
+                {
+                    $addFields: {
+                        total_salary: {
+                            $sum: {
+                                $map: {
+                                    input: "$trips",
+                                    as: "trip",
+                                    in: { $add: ["$$trip.salary_lai_xe", "$$trip.salary_phu_xe"] }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]);
+    
+            // Trả về kết quả
+            res.status(200).json({
+                code: 200,
+                description: 'Danh sách tài xế với lương.',
+                result: driversWithSalaries
+            });
+        } catch (error) {
+            res.status(500).json({
+                code: 500,
+                description: 'Lỗi server khi lấy danh sách tài xế.',
+                result: error.message
+            });
+        }
+    };
+
 }
 
 module.exports = new DriverController();

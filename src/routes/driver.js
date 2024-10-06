@@ -5,6 +5,8 @@ const driverController = require('../app/controllers/DriverController');
 // Lấy tất cả tài xế
 router.get('/', driverController.index);
 
+router.get('/salary', driverController.getSalary);
+
 // Thêm tài xế mới
 router.post('/create', driverController.create);
 

@@ -5,11 +5,6 @@ class TripController {
     async index(req, res) {
         try {
             const trips = await Trip.find()
-                .populate('routes')
-                .populate('bus')
-                .populate('driver')
-                .populate('assistantDriver');
-            
             // Trả về JSON với các trường code, description, result
             res.status(200).json({
                 code: 200,

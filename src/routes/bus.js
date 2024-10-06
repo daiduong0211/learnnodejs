@@ -5,6 +5,10 @@ const busController = require('../app/controllers/BusController');
 // Lấy tất cả các xe khách
 router.get('/', busController.index);
 
+router.get('/revenue', busController.getBusRevenue);
+
+router.get('/maintenance-status', busController.getBusMaintenanceStatus);
+
 // Thêm xe khách mới
 router.post('/create', busController.create);
 

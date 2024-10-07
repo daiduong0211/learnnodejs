@@ -18,6 +18,7 @@
   "homepage": "https://github.com/daiduong0211/learnnodejs#readme",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.21.0",
     "express-handlebars": "^8.0.1",
     "mongoose": "^8.7.0",

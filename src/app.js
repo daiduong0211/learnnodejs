@@ -6,6 +6,7 @@ const handlebars = require('express-handlebars');
 const route = require('./routes');
 const morgan = require('morgan');
 const db = require('./config/db')
+const cors = require('cors');
 
 // app.use(express.static(path.join(__dirname, 'public')));
 // // Set static folder
@@ -21,6 +22,10 @@ app.use(morgan('combined'));
 
 // Middleware để phân tích cú pháp JSON
 app.use(express.json());
+
+// Tránh CORS
+app.use(cors());
+
 
 // Initialize routes
 route(app);

@@ -1,39 +1,72 @@
 const Bus = require('../models/Bus');
 
 class BusController {
-    // Xem tất cả các xe khách
+
     index(req, res) {
         Bus.find({})
             .then(buses => {
-                res.json(buses); // Trả về dữ liệu dạng JSON
+                res.json({
+                    code: 200,
+                    description: 'Danh sách các xe khách.',
+                    result: buses // Trả về danh sách xe khách trong trường result
+                });
             })
-            .catch(err => res.status(500).json({ error: err.message }));
+            .catch(err => res.status(500).json({
+                code: 500,
+                description: 'Lỗi trong quá trình lấy danh sách xe khách.',
+                error: err.message
+            }));
     }
-
+    
     // Thêm xe khách
     create(req, res) {
         const newBus = new Bus(req.body);
         newBus.save()
-            .then(bus => res.json(bus)) // Trả về xe vừa thêm dưới dạng JSON
-            .catch(err => res.status(500).json({ error: err.message }));
+            .then(bus => res.json({
+                code: 201,
+                description: 'Xe khách đã được thêm thành công.',
+                result: bus // Trả về xe vừa thêm trong trường result
+            }))
+            .catch(err => res.status(500).json({
+                code: 500,
+                description: 'Lỗi trong quá trình thêm xe khách.',
+                error: err.message
+            }));
     }
-
+    
     // Sửa thông tin xe khách
     update(req, res) {
         Bus.findByIdAndUpdate(req.params.id, req.body, { new: true })
-            .then(bus => res.json(bus)) // Trả về xe đã được sửa dưới dạng JSON
-            .catch(err => res.status(500).json({ error: err.message }));
+            .then(bus => res.json({
+                code: 200,
+                description: 'Thông tin xe khách đã được cập nhật.',
+                result: bus // Trả về xe đã sửa trong trường result
+            }))
+            .catch(err => res.status(500).json({
+                code: 500,
+                description: 'Lỗi trong quá trình sửa thông tin xe khách.',
+                error: err.message
+            }));
     }
-
+    
     // Xóa xe khách
     delete(req, res) {
         Bus.findByIdAndDelete(req.params.id)
-            .then(() => res.json({ message: 'Bus deleted' })) // Trả về thông báo sau khi xóa
-            .catch(err => res.status(500).json({ error: err.message }));
+            .then(() => res.json({
+                code: 200,
+                description: 'Xe khách đã được xóa thành công.',
+                result: null // Không có dữ liệu trả về
+            }))
+            .catch(err => res.status(500).json({
+                code: 500,
+                description: 'Lỗi trong quá trình xóa xe khách.',
+                error: err.message
+            }));
     }
 
 
     getBusRevenue = async (req, res) => {
+        const { startDate, endDate } = req.query;
         try {
             const busRevenue = await Bus.aggregate([
                 {
@@ -58,8 +91,8 @@ class BusController {
                                 $cond: [
                                     { $and: [
                                         { $ne: ["$trips", null] }, // Kiểm tra nếu trips không phải là null
-                                        { $gte: ["$trips.ngay_di", new Date(new Date().getFullYear(), new Date().getMonth(), 1)] }, // Chỉ tính doanh thu cho các chuyến đi trong tháng
-                                        { $lte: ["$trips.ngay_di", new Date()] } // Đảm bảo ngày không vượt quá ngày hiện tại
+                                        { $gte: ["$trips.ngay_di", new Date(startDate)] }, // Chỉ tính doanh thu cho các chuyến đi trong tháng
+                                        { $lte: ["$trips.ngay_di", new Date(endDate)] } // Đảm bảo ngày không vượt quá ngày hiện tại
                                     ] },
                                     {
                                         $multiply: [
@@ -108,8 +141,6 @@ class BusController {
             });
         }
     };
-
-
 
    getBusMaintenanceStatus = async (req, res) => {
         try {
@@ -161,14 +192,14 @@ class BusController {
                                 ]
                             }
                         },
-                        ngay_bao_duong_tiep: "$ngay_bao_duong_cuoi" // Thêm ngày bảo dưỡng tiếp theo
+                        ngay_bao_duong_cuoi: "$ngay_bao_duong_cuoi" // Thêm ngày bảo dưỡng tiếp theo
                     }
                 },
                 {
                     $set: {
                         "trip_info.next_maintenance_date": {
                             $dateAdd: {
-                                startDate: "$ngay_bao_duong_tiep", // Ngày bảo dưỡng gần nhất
+                                startDate: "$ngay_bao_duong_cuoi", // Ngày bảo dưỡng gần nhất
                                 unit: "day", // Đơn vị là ngày
                                 amount: {
                                     $floor: {
@@ -186,7 +217,7 @@ class BusController {
                     $set: {
                         can_bao_duong: {
                             $cond: [
-                                { $gt: ["$ngay_bao_duong_tiep", "$trip_info.next_maintenance_date"] }, // So sánh ngày
+                                { $gt: ["$ngay_bao_duong_cuoi", "$trip_info.next_maintenance_date"] }, // So sánh ngày
                                 true,
                                 false
                             ]

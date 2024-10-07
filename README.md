@@ -30,3 +30,6 @@ app.use(morgan('combined'))
 // cài đặt Template Engine
 npm install express-handlebars
 
+// Cài cors tránh CORS
+
+npm install cors

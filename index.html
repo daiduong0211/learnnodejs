@@ -4,448 +4,527 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Buttons</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Quản lý nhà xe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .modal {
+        .tabButton {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tabButton button {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-content {
             display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
+            margin-top: 20px;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .table {
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+            table-layout: fixed;
+            /* Các cột sẽ có độ rộng bằng nhau */
         }
 
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
+        .table th,
+        .table td {
+            text-align: center;
+            /* Căn giữa chữ trong các cột */
+            vertical-align: middle;
+            /* Đảm bảo chữ được căn giữa theo chiều dọc */
         }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+        h3 {
+            margin-left: 20px;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container mt-5">
-        <h2>Tùy chọn</h2>
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" id="show-cars-btn" class="btn btn-primary">Xem danh sách bảo dưỡng</button>
-            <button type="button" id="showRevenueButton" class="btn btn-secondary">Xem doanh thu</button>
-            <button type="button" id="salary-btn" class="btn btn-success">Xem lương tháng</button>
-            <button type="button" id="route-btn" class="btn btn-primary">Xem danh sách các tuyến xe</button>
+    <div class="main">
+        <div style="text-align: center; font-size: 20px; font-weight: bold; margin-top: 20px;">Quản lý nhà xe</div>
+        <div class="tabButton">
+            <button type="button" class="btn btn-primary" onclick="showTab('drivers')">Tài Xế</button>
+            <button type="button" class="btn btn-secondary" onclick="showTab('routes')">Tuyến Đường</button>
+            <button type="button" class="btn btn-success" onclick="showTab('cars')">Xe</button>
+            <button type="button" class="btn btn-danger" onclick="showTab('trips')">Chuyến Đi</button>
+            <button type="button" class="btn btn-warning" onclick="showTab('revenue')">Doanh thu xe</button>
+            <button type="button" class="btn btn-info" onclick="showTab('salary')">Lương tài xế</button>
+            <button type="button" class="btn btn-dark" onclick="showTab('maintenance-status')">Bảo dưỡng xe</button>
         </div>
     </div>
 
-    <div class="container mt-5 d-none" id="revenueTable">
-        <h2 class="mb-4">Danh Sách Xe và Doanh Thu</h2>
-
-        <form class="mb-4">
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="startDate">Ngày Bắt Đầu</label>
-                    <input type="date" class="form-control" id="startDate" value="2024-01-01">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="endDate">Ngày Kết Thúc</label>
-                    <input type="date" class="form-control" id="endDate" value="2024-06-30">
-                </div>
-                <div class="form-group col-md-4 align-self-end">
-                    <button id="search" class="btn btn-primary">Lọc</button>
-                </div>
-            </div>
-        </form>
-
-        <div>
-            <table class="table table-bordered">
-                <thead class="thead-light">
-                    <tr>
-                        <th>Biển Số</th>
-                        <th>Màu Xe</th>
-                        <th>Số Chuyến</th>
-                        <th>Số Khách</th>
-                        <th>Doanh Thu (VND)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>29B-12345</td>
-                        <td>Red</td>
-                        <td>10</td>
-                        <td>400</td>
-                        <td>4,000,000</td>
-                    </tr>
-                    <tr>
-                        <td>29B-67890</td>
-                        <td>Blue</td>
-                        <td>8</td>
-                        <td>300</td>
-                        <td>3,000,000</td>
-                    </tr>
-                    <tr>
-                        <td>29B-54321</td>
-                        <td>Green</td>
-                        <td>12</td>
-                        <td>600</td>
-                        <td>6,000,000</td>
-                    </tr>
-                    <tr>
-                        <td>29B-98765</td>
-                        <td>Yellow</td>
-                        <td>5</td>
-                        <td>150</td>
-                        <td>1,500,000</td>
-                    </tr>
-                    <tr>
-                        <td>29B-13579</td>
-                        <td>Black</td>
-                        <td>15</td>
-                        <td>750</td>
-                        <td>7,500,000</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-    </div>
-
-
-    <div class="container mt-5 d-none" id="expired-cars">
-        <h1>Danh sách xe và bảo dưỡng</h1>
-
-        <!-- Bảng cho các xe còn hạn bảo dưỡng -->
-        <div class="mb-5">
-            <h2>Các xe cần bảo dưỡng</h2>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Biển số</th>
-                        <th>Ngày bảo dưỡng tiếp theo</th>
-                        <th>Số ngày còn lại</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>29B-12345</td>
-                        <td id="next-maintenance-1">2024-01-10</td>
-                        <td>360</td>
-                    </tr>
-                    <tr>
-                        <td>29B-67890</td>
-                        <td id="next-maintenance-2">2024-05-01</td>
-                        <td>350</td>
-                    </tr>
-                    <tr>
-                        <td>29B-54321</td>
-                        <td id="next-maintenance-3">2024-08-15</td>
-                        <td>340</td>
-                    </tr>
-                    <tr>
-                        <td>29B-98765</td>
-                        <td id="next-maintenance-4">2024-12-01</td>
-                        <td>320</td>
-                    </tr>
-                    <tr>
-                        <td>29B-13579</td>
-                        <td id="next-maintenance-5">2023-09-20</td>
-                        <td>305</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Bảng cho các xe quá hạn bảo dưỡng -->
-        <div>
-            <h2>Các xe quá hạn bảo dưỡng</h2>
-            <table class="table table-bordered expired">
-                <thead>
-                    <tr>
-                        <th>Biển số</th>
-                        <th>Ngày bảo dưỡng tiếp theo</th>
-                        <th>Số ngày quá hạn</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>29B-13579</td>
-                        <td id="expired-next-maintenance">2023-09-20</td>
-                        <td>60</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="container mt-5 d-none" id="salary">
-        <h1>Danh sách lái xe và lương tháng</h1>
-
-        <table class="table table-bordered">
+    <!-- Bảng Tài Xế -->
+    <div id="drivers" class="tab-content">
+        <table class="table" id="driverTable">
             <thead>
                 <tr>
-                    <th>Họ và Tên</th>
-                    <th>Địa chỉ</th>
-                    <th>CMT</th>
-                    <th>Số điện thoại</th>
-                    <th>Ngày sinh</th>
-                    <th>Loại bằng lái</th>
-                    <th>Số bằng lái</th>
-                    <th>Kinh nghiệm (năm)</th>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Số Điện Thoại</th>
+                    <th scope="col">CMND</th>
+                    <th scope="col">Ngày Sinh</th>
+                    <th scope="col">Loại Bằng Lái</th>
                 </tr>
             </thead>
-            <tbody id="driverTableBody">
-                <!-- Dữ liệu tài xế sẽ được thêm vào đây -->
+            <tbody>
+                <!-- Dữ liệu sẽ được điền tại đây -->
             </tbody>
         </table>
     </div>
 
-    <div class="container mt-5 d-none" id="routeTable">
-        <h1>Danh sách các tuyến xe</h1>
-        <div id="route">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Điểm đi</th>
-                        <th>Điểm đến</th>
-                        <th>Chiều dài (km)</th>
-                        <th>Độ phức tạp</th>
-                    </tr>
-                </thead>
-                <tbody id="routeTableBody">
-                    <!-- Dữ liệu tuyến xe sẽ được thêm vào đây -->
-                </tbody>
-            </table>
-        </div>
+    <!-- Bảng bảo trì -->
+    <div id="maintenance-status" class="tab-content">
+        <!-- Bảng Xe Chưa Tới Hạn -->
+        <h3>Xe Chưa Tới Hạn</h3>
+        <table class="table" id="onTimeTable">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Biển Số</th>
+                    <th scope="col">Màu Xe</th>
+                    <th scope="col">Hãng Sản Xuất</th>
+                    <th scope="col">Năm Sản Xuất</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Số Ghế</th>
+                    <th scope="col">Ngày Bảo Dưỡng Gần Nhất</th>
+                    <th scope="col">Ngày Bảo Dưỡng Tiếp</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+        <!-- Bảng Xe Quá Hạn -->
+        <h3>Xe Quá Hạn</h3>
+        <table class="table" id="overdueTable">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Biển Số</th>
+                    <th scope="col">Màu Xe</th>
+                    <th scope="col">Hãng Sản Xuất</th>
+                    <th scope="col">Năm Sản Xuất</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Số Ghế</th>
+                    <th scope="col">Ngày Bảo Dưỡng Gần Nhất</th>
+                    <th scope="col">Ngày Bảo Dưỡng Tiếp</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
 
 
-    <div id="generalModal" style="display:none;">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modalTitle"></h2>
-            <div id="modalContent">
-                <!-- Nội dung modal sẽ được cập nhật bằng JavaScript -->
-                <form id="routeForm">
-                    <label>Điểm đi:</label>
-                    <input type="text" id="routeStart" /><br>
-                    <label>Điểm đến:</label>
-                    <input type="text" id="routeEnd" /><br>
-                    <label>Chiều dài (km):</label>
-                    <input type="number" id="routeLength" /><br>
-                    <label>Độ phức tạp:</label>
-                    <input type="text" id="routeComplexity" /><br>
-                    <button type="button" onclick="updateRoute()">Cập nhật</button>
-                </form>
-            </div>
-        </div>
+    <!-- Bảng Lương Tài Xế -->
+    <div id="salary" class="tab-content">
+        <table class="table" id="salaryTable">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">ID Tài Xế</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">CMND</th>
+                    <th scope="col">Số Bằng Lái</th>
+                    <th scope="col">Loại Bằng Lái</th>
+                    <th scope="col">Địa Chỉ</th>
+                    <th scope="col">Ngày Sinh</th>
+                    <th scope="col">Thâm Niên (năm)</th>
+                    <th scope="col">Số Điện Thoại</th>
+                    <th scope="col">Tổng Lương</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu sẽ được điền tại đây -->
+            </tbody>
+        </table>
     </div>
 
+    <!-- Bảng Tuyến Đường -->
+    <div id="routes" class="tab-content">
+        <table class="table" id="routeTable">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Điểm Đầu</th>
+                    <th scope="col">Điểm Cuối</th>
+                    <th scope="col">Độ Dài (km)</th>
+                    <th scope="col">Độ Phức Tạp</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu sẽ được điền tại đây -->
+            </tbody>
+        </table>
+    </div>
 
+    <!-- Bảng Xe -->
+    <div id="cars" class="tab-content">
+        <table class="table" id="carTable">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Biển Số</th>
+                    <th scope="col">Màu Xe</th>
+                    <th scope="col">Hãng Sản Xuất</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Số Ghế</th>
+                    <th scope="col">Năm Sử Dụng</th>
+                    <th scope="col">Ngày Bảo Dưỡng Cuối</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu sẽ được điền tại đây -->
+            </tbody>
+        </table>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bảng Chuyến Đi -->
+    <div id="trips" class="tab-content">
+        <table class="table" id="tripTable">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Mã Chuyến</th>
+                    <th scope="col">Tuyến Đường</th>
+                    <th scope="col">Xe</th>
+                    <th scope="col">Lái Xe</th>
+                    <th scope="col">Phụ Xe</th>
+                    <th scope="col">Số Khách</th>
+                    <th scope="col">Giá Vé</th>
+                    <th scope="col">Ngày Đi</th>
+                    <th scope="col">Ngày Về</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu sẽ được điền tại đây -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bảng Doanh Thu -->
+    <div id="revenue" class="tab-content">
+        <div style="margin: 20px; font-family: Arial, sans-serif;">
+            <label for="startDate" style="font-weight: bold; margin-right: 10px;">Ngày Bắt Đầu:</label>
+            <input type="date" id="startDate" style="padding: 8px; margin-right: 20px; border: 1px solid #ccc; border-radius: 4px;">
+        
+            <label for="endDate" style="font-weight: bold; margin-right: 10px;">Ngày Kết Thúc:</label>
+            <input type="date" id="endDate" style="padding: 8px; margin-right: 20px; border: 1px solid #ccc; border-radius: 4px;">
+        
+            <button id="loadRevenueBtn" style="padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;">Tải Dữ Liệu Doanh Thu</button>
+        </div>
+        
+        <table class="table" id="revenueTable">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Bus ID</th>
+                    <th scope="col">Biển Số</th>
+                    <th scope="col">Màu xe</th>
+                    <th scope="col">Hãng sản Xuất</th>
+                    <th scope="col">Đời Xe</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Số ghế</th>
+                    <th scope="col">Doanh thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dữ liệu sẽ được điền tại đây -->
+            </tbody>
+        </table>
+    </div>
+
     <script>
-        let selectedRouteIndex = null;
+        // Hàm để hiển thị tab tương ứng
+        function showTab(tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            const selectedTab = document.getElementById(tabId);
+            selectedTab.classList.add('active');
 
-
-        document.getElementById('showRevenueButton').addEventListener('click', function () {
-            const revenueTable = document.getElementById('revenueTable');
-            revenueTable.classList.toggle('d-none'); // Hiện hoặc ẩn bảng doanh thu
-        });
-
-        // Thêm sự kiện click cho nút hiển thị danh sách xe
-        document.getElementById("show-cars-btn").addEventListener("click", function () {
-            const expiredCar = document.getElementById('expired-cars');
-            expiredCar.classList.toggle('d-none'); // Hiện hoặc ẩn bảng doanh thu
-        });
-
-        // Xem thông tin tài xế và lương tháng
-        async function fetchDrivers() {
-            try {
-                const response = await fetch('http://26.132.94.82:3000/api/drivers');
-                const data = await response.json();
-
-                if (data.code === 200) {
-                    fillDriverTable(data.result);
-                } else {
-                    console.error(data.description);
-                }
-            } catch (error) {
-                console.error('Lỗi khi gọi API:', error);
+            if (tabId === 'drivers') {
+                loadDriverData();
+            } else if (tabId === 'routes') {
+                loadRouteData();
+            } else if (tabId === 'cars') {
+                loadCarData();
+            } else if (tabId === 'trips') {
+                loadTripData();
             }
+            else if (tabId === 'revenue') {
+                // loadRevenueData();
+            }
+            else if (tabId === 'salary') {
+                loadSalaryData();
+            }
+            else if (tabId === 'maintenance-status') {
+                loadMaintenanceData();
+            }
+
         }
 
-        // fill data
-        function fillDriverTable(drivers) {
-            const tableBody = document.getElementById('driverTableBody');
-            tableBody.innerHTML = '';
+        // Hàm để tải dữ liệu Tài Xế
+        function loadDriverData() {
+            fetch('http://localhost:3000/api/drivers')
+                .then(response => response.json())
+                .then(data => {
+                    const driverTableBody = document.querySelector('#driverTable tbody');
+                    driverTableBody.innerHTML = '';
+                    data.result.forEach((driver, index) => {
+                        const row = `
+                        <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${driver.ten}</td>
+                            <td>${driver.sdt}</td>
+                            <td>${driver.CMT}</td>
+                            <td>${new Date(driver.ngay_sinh).toLocaleDateString()}</td>
+                            <td>${driver.loai_bang_lai}</td>
+                        </tr>
+                    `;
+                        driverTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu tài xế:', error);
+                });
+        }
 
-            drivers.forEach(driver => {
-                const row = `
+        // Hàm để tải dữ liệu Tuyến Đường
+        function loadRouteData() {
+            fetch('http://localhost:3000/api/routes')
+                .then(response => response.json())
+                .then(data => {
+                    const routeTableBody = document.querySelector('#routeTable tbody');
+                    routeTableBody.innerHTML = '';
+                    data.result.forEach((route, index) => {
+                        const row = `
+                        <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${route.diem_dau}</td>
+                            <td>${route.diem_cuoi}</td>
+                            <td>${route.do_dai}</td>
+                            <td>${route.do_phuc_tap}</td>
+                        </tr>
+                    `;
+                        routeTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu tuyến đường:', error);
+                });
+        }
+
+        // Hàm để tải dữ liệu Xe
+        function loadCarData() {
+            fetch('http://localhost:3000/api/buses')
+                .then(response => response.json())
+                .then(data => {
+                    const carTableBody = document.querySelector('#carTable tbody');
+                    carTableBody.innerHTML = '';
+                    data.result.forEach((car, index) => {
+                        const row = `
+                        <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${car.bien_so}</td>
+                            <td>${car.mau_xe}</td>
+                            <td>${car.hang_san_xuat}</td>
+                            <td>${car.model}</td>
+                            <td>${car.so_ghe}</td>
+                            <td>${car.so_nam_su_dung}</td>
+                            <td>${new Date(car.ngay_bao_duong_cuoi).toLocaleDateString()}</td>
+                        </tr>
+                    `;
+                        carTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu xe:', error);
+                });
+        }
+
+        // Hàm để tải dữ liệu Chuyến Đi
+        function loadTripData() {
+            fetch('http://localhost:3000/api/trips')
+                .then(response => response.json())
+                .then(data => {
+                    const tripTableBody = document.querySelector('#tripTable tbody');
+                    tripTableBody.innerHTML = '';
+                    data.result.forEach((trip, index) => {
+                        const row = `
+                        <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${trip.ma_chuyen}</td>
+                            <td>${trip.route_id}</td>
+                            <td>${trip.bus_id}</td>
+                            <td>${trip.lai_xe_id}</td>
+                            <td>${trip.phu_xe_id}</td>
+                            <td>${trip.so_khach}</td>
+                            <td>${trip.gia_ve}</td>
+                            <td>${new Date(trip.ngay_di).toLocaleDateString()}</td>
+                            <td>${new Date(trip.ngay_ve).toLocaleDateString()}</td>
+                        </tr>
+                    `;
+                        tripTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu chuyến đi:', error);
+                });
+        }
+
+        // Hàm tải dữ liệu doanh thu với ngày bắt đầu và ngày kết thúc
+        function loadRevenueData(startDate, endDate) {
+            // Tạo URL với tham số ngày bắt đầu và kết thúc
+            const url = `http://localhost:3000/api/buses/revenue?startDate=${startDate}&endDate=${endDate}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const revenueTableBody = document.querySelector('#revenueTable tbody');
+                    revenueTableBody.innerHTML = ''; // Xóa nội dung cũ
+                    data.result.forEach((revenue, index) => {
+                        const row = `
                     <tr>
-                        <td>${driver.ten}</td>
-                        <td>${driver.dia_chi}</td>
-                        <td>${driver.CMT}</td>
-                        <td>${driver.sdt}</td>
-                        <td>${new Date(driver.ngay_sinh).toLocaleDateString('vi-VN')}</td>
-                        <td>${driver.loai_bang_lai}</td>
-                        <td>${driver.so_bang_lai}</td>
-                        <td>${driver.tham_nien}</td>
+                        <th scope="row">${index + 1}</th>
+                        <td>${revenue.bus_id}</td>
+                        <td>${revenue.bus_info.bien_so}</td>
+                        <td>${revenue.bus_info.mau_xe}</td>
+                        <td>${revenue.bus_info.hang_san_xuat}</td>
+                        <td>${revenue.bus_info.doi_xe}</td>
+                        <td>${revenue.bus_info.model}</td>
+                        <td>${revenue.bus_info.so_ghe}</td>
+                        <td>${revenue.total_revenue}</td>
                     </tr>
                 `;
-                tableBody.innerHTML += row; // add row
-            });
+                        revenueTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu doanh thu:', error);
+                });
         }
 
-        document.getElementById("salary-btn").addEventListener("click", function () {
-            const expiredCar = document.getElementById('salary');
-            expiredCar.classList.toggle('d-none'); // Hiện hoặc ẩn bảng doanh thu
+        // Gắn sự kiện click cho nút tải dữ liệu
+        document.getElementById('loadRevenueBtn').addEventListener('click', function() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
 
-            if (!expiredCar.classList.contains('d-none')) {
-                fetchDrivers(); // Gọi hàm fetchDrivers chỉ khi bảng được hiện
-            }
-        });
-
-        // Xem thông tin chuyến xe   routeTable
-        let routes = [];
-        async function fetchRoute() {
-            try {
-                const response = await fetch('http://26.132.94.82:3000/api/routes');
-                const data = await response.json();
-
-                if (data.code === 200) {
-                    fillRouteTable(data.result);
-                } else {
-                    console.error(data.description);
-                }
-            } catch (error) {
-                console.error('Lỗi khi gọi API:', error);
-            }
+        // Kiểm tra điều kiện
+        if (!startDate || !endDate) {
+            window.alert('Vui lòng chọn cả Ngày Bắt Đầu và Ngày Kết Thúc.'); // Hiển thị thông báo
+            return; // Ngừng thực hiện nếu không có ngày
         }
 
-        function fillRouteTable(data) {
-            const tableBody = document.getElementById('routeTableBody');
-            tableBody.innerHTML = ''; // Xóa dữ liệu cũ trước khi thêm mới
-            routes = data;
-            routes.forEach((route, index) => {
-                const row = `
-                <tr>
-                    <td>${route.diem_dau}</td>
-                    <td>${route.diem_cuoi}</td>
-                    <td>${route.do_dai}</td>
-                    <td>${route.do_phuc_tap}</td>
-                    <td><button onclick="showRouteDetails(${index})">Xem chi tiết</button></td>
-                </tr>
-            `;
-                tableBody.innerHTML += row; // Thêm hàng mới vào bảng
-            });
+        // Gọi hàm tải dữ liệu doanh thu với ngày bắt đầu và kết thúc đã chọn
+        loadRevenueData(startDate, endDate);
+         });
+
+        // hàm tải dữ liệu lương tài xế
+        function loadSalaryData() {
+            fetch('http://localhost:3000/api/drivers/salary')
+                .then(response => response.json())
+                .then(data => {
+                    const salaryTableBody = document.querySelector('#salaryTable tbody');
+                    salaryTableBody.innerHTML = '';
+                    data.result.forEach((salary, index) => {
+                        console.log(revenue)
+                        const row = `
+                        <tr>
+                            <th scope="row">${index + 1}</th>
+                            <td>${salary.driver_id}</td>
+                            <td>${salary.ten}</td>
+                            <td>${salary.CMT}</td>
+                            <td>${salary.so_bang_lai}</td>
+                            <td>${salary.loai_bang_lai}</td>
+                            <td>${salary.dia_chi}</td>
+                            <td>${new Date(salary.ngay_sinh).toLocaleDateString('vi-VN')}</td>
+                            <td>${salary.tham_nien}</td>
+                            <td>${salary.sdt}</td>
+                            <td>${salary.total_salary}</td>
+                        </tr>
+                    `;
+                        salaryTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu chuyến đi:', error);
+                });
         }
 
-        function showRouteDetails(index) {
-            selectedRouteIndex = index;
-            const route = routes[index];
+        // Hàm tải dữ liệu bảo trì
+        function loadMaintenanceData() {
+            fetch('http://localhost:3000/api/buses/maintenance-status')
+                .then(response => response.json())
+                .then(data => {
+                    // Lấy tbody cho bảng xe chưa tới hạn
+                    const onTimeTableBody = document.querySelector('#onTimeTable tbody');
+                    onTimeTableBody.innerHTML = ''; // Xóa nội dung cũ
 
-            // Điền dữ liệu hiện tại vào các input
-            document.getElementById('routeStart').value = route.diem_dau;
-            document.getElementById('routeEnd').value = route.diem_cuoi;
-            document.getElementById('routeLength').value = route.do_dai;
-            document.getElementById('routeComplexity').value = route.do_phuc_tap;
+                    // Hiển thị dữ liệu cho bảng xe chưa tới hạn
+                    data.result[0].con_han.forEach((bus, index) => {
+                        const row = `
+                    <tr>
+                        <th scope="row">${index + 1}</th>
+                        <td>${bus.bien_so}</td>
+                        <td>${bus.mau_xe}</td>
+                        <td>${bus.hang_san_xuat}</td>
+                        <td>${bus.doi_xe}</td>
+                        <td>${bus.model}</td>
+                        <td>${bus.so_ghe}</td>
+                        <td>${new Date(bus.ngay_bao_duong_cuoi).toLocaleDateString('vi-VN')}</td>
+                        <td>${new Date(bus.trip_info.next_maintenance_date).toLocaleDateString('vi-VN')}</td>
+                    </tr>
+                `;
+                        onTimeTableBody.innerHTML += row;
+                    });
 
-            // Hiển thị modal
-            showModal('Cập nhật tuyến xe');
+                    // Lấy tbody cho bảng xe quá hạn
+                    const overdueTableBody = document.querySelector('#overdueTable tbody');
+                    overdueTableBody.innerHTML = ''; // Xóa nội dung cũ
+
+                    // Hiển thị dữ liệu cho bảng xe quá hạn
+                    data.result[0].qua_han.forEach((bus, index) => {
+                        const row = `
+                    <tr>
+                        <th scope="row">${index + 1}</th>
+                        <td>${bus.bien_so}</td>
+                        <td>${bus.mau_xe}</td>
+                        <td>${bus.hang_san_xuat}</td>
+                        <td>${bus.doi_xe}</td>
+                        <td>${bus.model}</td>
+                        <td>${bus.so_ghe}</td>
+                        <td>${new Date(bus.ngay_bao_duong_cuoi).toLocaleDateString('vi-VN')}</td>
+                        <td>${new Date(bus.trip_info.next_maintenance_date).toLocaleDateString('vi-VN')}</td>
+                    </tr>
+                `;
+                        overdueTableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi tải dữ liệu bảo trì:', error);
+                });
         }
-
-        document.getElementById("route-btn").addEventListener("click", function () {
-            const expiredCar = document.getElementById('routeTable');
-            expiredCar.classList.toggle('d-none'); // Hiện hoặc ẩn bảng doanh thu
-
-            if (!expiredCar.classList.contains('d-none')) {
-                fetchRoute(); // Gọi hàm fetchDrivers chỉ khi bảng được hiện
-            }
-        });
-
-        function showModal(title) {
-            const modal = document.getElementById('generalModal');
-            const modalTitle = document.getElementById('modalTitle');
-
-            // Cập nhật tiêu đề modal
-            modalTitle.textContent = title;
-
-            // Hiển thị modal
-            modal.style.display = 'block';
-
-            // Đóng modal khi nhấn nút "X"
-            const closeButton = document.querySelector('.close');
-            closeButton.onclick = function () {
-                modal.style.display = 'none';
-            };
-
-            // Đóng modal khi nhấn ra ngoài modal
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            };
-        }
-
-        // Hàm để cập nhật thông tin từ form trong modal và gửi đến API
-        // function updateRoute() {
-        //     if (selectedRouteIndex !== null) {
-        //         // Lấy dữ liệu từ các input
-        //         const updatedRoute = {
-        //             diem_dau: document.getElementById('routeStart').value,
-        //             diem_cuoi: document.getElementById('routeEnd').value,
-        //             do_dai: document.getElementById('routeLength').value,
-        //             do_phuc_tap: document.getElementById('routeComplexity').value
-        //         };
-
-        //         // Gửi dữ liệu đến API
-        //         fetch('https://your-api-url.com/update-route', {
-        //             method: 'PUT', // Hoặc 'POST' tùy thuộc vào API của bạn
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify(updatedRoute), // Chuyển đối tượng thành JSON
-        //         })
-        //             .then(response => response.json()) // Xử lý phản hồi từ API
-        //             .then(data => {
-        //                 console.log('Cập nhật thành công:', data);
-
-        //                 // Cập nhật lại dữ liệu trong bảng nếu cần
-        //                 routes[selectedRouteIndex] = updatedRoute;
-        //                 fillRouteTable(routes);
-
-        //                 // Ẩn modal sau khi cập nhật thành công
-        //                 document.getElementById('generalModal').style.display = 'none';
-        //             })
-        //             .catch(error => {
-        //                 console.error('Lỗi khi cập nhật dữ liệu:', error);
-        //             });
-        //     }
-        // }
-
-
-
 
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
